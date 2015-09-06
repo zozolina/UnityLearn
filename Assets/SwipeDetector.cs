@@ -122,12 +122,12 @@ public class SwipeDetector : MonoBehaviour
     private void OnSwipeTop()
     {
         //mMessageIndex = 3;
-        characterControl.caseSwitch = 1;
+        characterControl.Jump();
     }
 
     private void OnSwipeBottom()
     {
        // mMessageIndex = 4;
-        characterControl.caseSwitch = 3;
+        characterControl.Crouch(true);
     }
 }

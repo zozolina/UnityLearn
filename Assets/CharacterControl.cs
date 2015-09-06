@@ -1,68 +1,76 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using System.Collections;
 
 public class CharacterControl : MonoBehaviour 
 {
-	public int speed=1;
+    [Header("Player Movement")]
+	public int moveSpeed=1;
 	public int jumpSpeed=1;
-	private float moveVelocity;
-    public int caseSwitch;
     CircleCollider2D c;
+    bool can2XJump;
+    bool canCrouch = true;
+    
+    [Header("Ground Checker")]
+    public Transform groundChecker;
+    public LayerMask whatIsGround;
+    float groundRadius = 0.2f;
+    bool isGrounded;
+    
+    
 
 	void Start () 
 	{
-        caseSwitch = 0;
         c = transform.GetComponent<CircleCollider2D>();
 	}
 	
 
 	void FixedUpdate () 
 	{
-
+        isGrounded = Physics2D.OverlapCircle(groundChecker.position, groundRadius, whatIsGround);
         //run to right
-        transform.GetComponent<Rigidbody2D>().velocity = new Vector2(speed, transform.GetComponent<Rigidbody2D>().velocity.y);
-
-        switch (caseSwitch)
-        {
-                
-            //jump
-            case 1:
-                transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
-                Crouch(false);
-                caseSwitch = 0;
-                break;
-
-            //doubleJump
-            case 2:
-
-                break;
-
-            //crouch&Slide
-            case 3:
-                Crouch(true);
-                caseSwitch = 0;
-                break;
-
-            default:
-                break;
-        }
-
-
+        transform.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, transform.GetComponent<Rigidbody2D>().velocity.y);
 	}
 
-    void Crouch(bool crouching)
+    public void Jump ()
     {
-        if (crouching)
+        if (isGrounded)
         {
+            print("I'm Jumping!");
+            transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
+            can2XJump = true;
+            Crouch(false);
+        }
+        else if (!isGrounded && can2XJump)
+        {
+            print("I'm DoubleJumping!");
+            transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
+            can2XJump = false;
+            Crouch(false);
+        }
+    }
+
+    public void Crouch(bool crouching)
+    {
+        if (crouching && canCrouch && isGrounded)
+        {
+            print("I'm Crouching!");
             transform.localScale = new Vector2(1f, 0.65f);
             transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
             c.radius = 0.25f;
+            canCrouch = false;
         }
-        else
+        else if (!crouching)
         {
+            print("I'm NOT Crouching!");
             transform.localScale = new Vector2(1f, 1f);
             transform.position = new Vector2(transform.position.x, transform.position.y + 0.5f);
             c.radius = 0.5f;
+            canCrouch = true;
         }
     }
+
+   
 }
