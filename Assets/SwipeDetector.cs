@@ -111,7 +111,7 @@ public class SwipeDetector : MonoBehaviour
 
     private void OnSwipeLeft()
     {
-        //mMessageIndex = 1;
+        //ce cod vreau eu
     }
 
     private void OnSwipeRight()

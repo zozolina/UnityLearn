@@ -18,12 +18,13 @@ public class CharacterControl : MonoBehaviour
     public LayerMask whatIsGround;
     float groundRadius = 0.2f;
     bool isGrounded;
-    
+	Butoane b;
     
 
 	void Start () 
 	{
         c = transform.GetComponent<CircleCollider2D>();
+		b = FindObjectOfType <Butoane> ();
 	}
 	
 
@@ -36,40 +37,46 @@ public class CharacterControl : MonoBehaviour
 
     public void Jump ()
     {
-        if (isGrounded)
-        {
-            print("I'm Jumping!");
-            transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
-            can2XJump = true;
-            Crouch(false);
-        }
-        else if (!isGrounded && can2XJump)
-        {
-            print("I'm DoubleJumping!");
-            transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
-            can2XJump = false;
-            Crouch(false);
-        }
+		if (!b.isPaused) 
+		{
+			if (isGrounded)
+			{
+				print("I'm Jumping!");
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
+				can2XJump = true;
+				Crouch(false);
+			}
+			else if (!isGrounded && can2XJump)
+			{
+				print("I'm DoubleJumping!");
+				transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, jumpSpeed);
+				can2XJump = false;
+				Crouch(false);
+			}
+		}
     }
 
     public void Crouch(bool crouching)
     {
-        if (crouching && canCrouch && isGrounded)
-        {
-            print("I'm Crouching!");
-            transform.localScale = new Vector2(1f, 0.65f);
-            transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
-            c.radius = 0.25f;
-            canCrouch = false;
-        }
-        else if (!crouching)
-        {
-            print("I'm NOT Crouching!");
-            transform.localScale = new Vector2(1f, 1f);
-            transform.position = new Vector2(transform.position.x, transform.position.y + 0.5f);
-            c.radius = 0.5f;
-            canCrouch = true;
-        }
+		if (!b.isPaused) 
+		{
+			if (crouching && canCrouch && isGrounded) 
+			{
+				print ("I'm Crouching!");
+				transform.localScale = new Vector2 (1f, 0.65f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y - 0.5f);
+				c.radius = 0.25f;
+				canCrouch = false;
+			} 
+			else if (!crouching) 
+			{
+				print ("I'm NOT Crouching!");
+				transform.localScale = new Vector2 (1f, 1f);
+				transform.position = new Vector2 (transform.position.x, transform.position.y + 0.5f);
+				c.radius = 0.5f;
+				canCrouch = true;
+			}
+		}
     }
 
    
