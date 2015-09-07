@@ -32,6 +32,7 @@ public class CharacterControl : MonoBehaviour
 	{
         isGrounded = Physics2D.OverlapCircle(groundChecker.position, groundRadius, whatIsGround);
         //run to right
+		if (!FindObjectOfType<Butoane>().isPaused)
         transform.GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, transform.GetComponent<Rigidbody2D>().velocity.y);
 	}
 
@@ -67,17 +68,20 @@ public class CharacterControl : MonoBehaviour
 				transform.position = new Vector2 (transform.position.x, transform.position.y - 0.5f);
 				c.radius = 0.25f;
 				canCrouch = false;
+				StartCoroutine(NoCrouch());
 			} 
-			else if (!crouching) 
-			{
-				print ("I'm NOT Crouching!");
-				transform.localScale = new Vector2 (1f, 1f);
-				transform.position = new Vector2 (transform.position.x, transform.position.y + 0.5f);
-				c.radius = 0.5f;
-				canCrouch = true;
-			}
 		}
     }
+
+	IEnumerator NoCrouch()
+	{
+		yield return new WaitForSeconds (2f);
+		print ("I'm NOT Crouching!");
+		transform.localScale = new Vector2 (1f, 1f);
+		transform.position = new Vector2 (transform.position.x, transform.position.y + 0.5f);
+		c.radius = 0.5f;
+		canCrouch = true;
+	}
 
    
 }
